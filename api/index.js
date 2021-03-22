@@ -61,4 +61,7 @@ app.use((erro, req, res, proximo) => {
 
 app.use('/api/fornecedores', roteador)
 
+const roteadorV2 = require('./routes/fornecedores/routes.v2')
+app.use('/api/v2/fornecedores', roteadorV2)
+
 app.listen(config.get('api.porta'), () => console.log('Api is running'))

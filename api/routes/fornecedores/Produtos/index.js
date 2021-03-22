@@ -161,6 +161,8 @@ roteador.post('/:id/diminuir-estoque', async (req, res, proximo) => {
     }
 })
 
+const roteadorReclamacoes = require('./reclamacoes')
+roteador.use('./:idProduto/reclamacoes', roteadorReclamacoes)
 
 
 module.exports = roteador
