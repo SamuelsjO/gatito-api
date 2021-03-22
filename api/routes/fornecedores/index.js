@@ -4,6 +4,13 @@ const Fornecedor = require('./Fonercedor')
 const roteadorProdutos = require('./produtos')
 const SerializadorFornecedor = require('../../Serializador').SerializadorFornecedor
 
+roteador.options('/', (req, res) => {
+    res.set('Acess-Control-Allow-Methods' , 'GET, POST')
+    res.set('Acess-Control-Allow-Headers' , 'Content-Type')
+    res.status(204)
+    res.end()
+})
+
 roteador.get('/', async (req, res) => {
     const resultados = await TabelaFornecedor.listar()
     res.status(200)
@@ -30,6 +37,13 @@ roteador.post('/', async (req, res, proximo) => {
     } catch (erro) {
         proximo(erro)
     }
+})
+
+roteador.options('/:idFornecedor', (req, res) => {
+    res.set('Acess-Control-Allow-Methods' , 'GET, PUT, DELETE')
+    res.set('Acess-Control-Allow-Headers' , 'Content-Type')
+    res.status(204)
+    res.end()
 })
 
 roteador.get('/:idFornecedor', async (req, res, proximo) => {
@@ -79,6 +93,18 @@ roteador.delete('/:idFornecedor', async (req, res, proximo) => {
     }
 })
 
-roteador.use('/:idFornecedor/produtos', roteadorProdutos)
+const verificarFornecedor = async (req, res, proximo) => {
+    try {
+        const id = req.params.idFornecedor
+        const fornecedor = new Fornecedor({ id: id })
+        await fornecedor.carregar()
+        req.fornecedor = fornecedor
+        proximo()
+    } catch (erro) {
+        proximo(erro)
+    }
+}
+
+roteador.use('/:idFornecedor/produtos',verificarFornecedor, roteadorProdutos)
 
 module.exports = roteador

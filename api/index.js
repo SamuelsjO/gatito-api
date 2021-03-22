@@ -29,11 +29,14 @@ app.use((req, res, proximo) => {
     proximo()
 })
 
-app.use('/api/fornecedores', roteador)
-
+app.use((req, res, proximo) => {
+    res.set('Access-Control-Allow-Origin', '*')
+    proximo()
+})
 
 app.use((erro, req, res, proximo) => {
     let status = 500
+    
     if(erro instanceof NaoEncontrado) {
         status = 404
     }
@@ -55,5 +58,7 @@ app.use((erro, req, res, proximo) => {
         })
     )
 })
+
+app.use('/api/fornecedores', roteador)
 
 app.listen(config.get('api.porta'), () => console.log('Api is running'))

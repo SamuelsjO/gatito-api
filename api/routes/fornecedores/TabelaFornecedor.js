@@ -17,8 +17,8 @@ module.exports = {
             }
         })
 
-        if(!encontrado){
-            throw new NaoEncontrado()
+        if (!encontrado) {
+            throw new NaoEncontrado('Fornecedor')
         }
 
         return encontrado
